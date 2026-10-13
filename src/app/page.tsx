@@ -1,9 +1,12 @@
+import HeroPage from "./Components/HomeComponents/HeroPage";
+import PriceUp from "./Components/HomeComponents/PriceUp";
 
 
 export default function Home() {
   return (
     <div>
-      hello
+      <HeroPage />
+      <PriceUp />
     </div>
   );
 }
