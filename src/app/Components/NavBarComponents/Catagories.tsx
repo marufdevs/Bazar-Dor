@@ -24,7 +24,7 @@ const Catagories = () => {
     handleCategories();
   }, []);
   return (
-    <div className="w-full text-center md:w-auto md:shrink-0 flex gap-8">
+    <div className="max-w-7xl mx-auto text-center justify-center md:w-auto md:shrink-0 flex gap-8">
       {data.map((item) => {
         return ( 
           <Link href={`/${item.slug}`} key={item.id}>

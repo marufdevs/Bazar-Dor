@@ -1,10 +1,12 @@
 "use client";
-import { NavCataGories } from "@/app/Types/NavCatergories";
+import { Product } from "@/app/Types/NavMarqueeItems";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import MarqueeText from "react-marquee-text"
+// import "MarqueeText/styles.css"
 
 const Marquee = () => {
-  const [data, setData] = useState<NavCataGories[]>([]);
+  const [data, setData] = useState<Product[]>([]);
   const [err, setErr] = useState("");
   useEffect(() => {
     const handleMarquee = async () => {
@@ -24,17 +26,36 @@ const Marquee = () => {
     handleMarquee();
   }, []);
   return (
-    <div className="w-full text-center md:w-auto md:shrink-0 flex gap-8">
-      {data.map((item) => {
-        console.log(item);
-        return (
-          <Link href={`/${item.id}`} key={item.id}>
-            <span>{item.nameBn}</span>
-            <span>{}</span>
-          </Link>
-        );
-      })}
-    </div>
+
+      <MarqueeText direction="right" duration={20} className="bg-[#f6f9f6] p-2">
+        <div className="w-full text-center md:w-auto md:shrink-0 flex gap-8">
+          {data.map((item) => {
+            // console.log(item);
+            return (
+              <Link href={`/product/${item.id}`} key={item.id} className="flex">
+                <span>
+                  {item.categoryIcon} {item.nameBn} {item.today}/{item.unit}{" "}
+
+                  {item.change.dir === "up" ? (
+                    <span className="text-red-500">
+                      ▲ {item.change.pct}%
+                    </span>
+                  ) : item.change.dir === "down" ? (
+                    <span className="text-green-500">
+                      ▼ {item.change.pct}%
+                    </span>
+                  ) : (
+                    <span className="text-yellow-500">
+                      - {item.change.pct}%
+                    </span>
+                  )}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      </MarqueeText >
+
   );
 };
 
