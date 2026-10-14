@@ -1,4 +1,3 @@
-
 "use client";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,9 +5,12 @@ import React, { useEffect, useState } from "react";
 import DropDwon from "./DropDwon";
 import Marquee from "./Marquee";
 import Catagories from "./Catagories";
+import { signOut, useSession } from "@/lib/auth-client";
 
 const NavBar = () => {
   const [date, setDate] = useState("");
+  const { data: session, isPending } = useSession();
+  console.log(session);
   useEffect(() => {
     setDate(
       new Date().toLocaleDateString("bn-BD", {
@@ -39,35 +41,53 @@ const NavBar = () => {
                 বাজার দর
               </Link>
 
-              <span className="text-left text-[10px] sm:text-xs">
-                {date}
-              </span>
+              <span className="text-left text-[10px] sm:text-xs">{date}</span>
             </div>
           </div>
 
-          <div className="flex shrink-0 items-center gap-2">
-            <div className="dropdown dropdown-end">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-ghost btn-circle avatar"
-              >
-                <div className="w-8 rounded-full sm:w-10">
-                  <img
-                    alt="Tailwind CSS Navbar component"
-                    src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  />
+          {isPending ? (
+            <span className="loading loading-spinner loading-sm"></span>
+          ) : session?.user ? (
+            <div className="flex shrink-0 items-center gap-2">
+              <div className="dropdown dropdown-end">
+                <div
+                  tabIndex={0}
+                  role="button"
+                  className="btn btn-ghost btn-circle avatar"
+                >
+                  <div className="w-8 rounded-full sm:w-10">
+                    <img
+                      alt="Tailwind CSS Navbar component"
+                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <ul
-                tabIndex={-1}
-                className="menu menu-sm dropdown-content z-1 mt-3 w-52 max-w-[calc(100vw-1rem)] rounded-box bg-base-100 p-2 shadow"
-              >
-                <DropDwon />
-              </ul>
+                <ul
+                  tabIndex={-1}
+                  className="menu menu-sm dropdown-content z-1 mt-3 w-52 max-w-[calc(100vw-1rem)] rounded-box bg-base-100 p-2 shadow"
+                >
+                  <DropDwon />
+                </ul>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex w-full items-center justify-end gap-2 sm:w-auto sm:gap-3">
+              <Link
+                href="/sign-in"
+                className="inline-flex min-h-9 items-center justify-center rounded-lg border border-base-300 px-3 py-2 text-sm font-semibold transition-colors bg-base-200 hover:bg-base-200 sm:min-h-10 sm:px-5 sm:text-base "
+              >
+                Sign In
+              </Link>
+
+              <Link
+                href="/sign-up"
+                className="inline-flex min-h-9 items-center justify-center rounded-lg px-3 py-2 text-sm font-semibold bg-[#05893E] text-white shadow-sm transition-all hover:opacity-90 active:scale-95 sm:min-h-10 sm:px-5 sm:text-base"
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
         </div>
         <div className="w-full min-w-0">
           <Catagories />

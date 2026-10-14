@@ -33,7 +33,6 @@ const DataFecth = ({ setQuantity }: DataFetchProps) => {
     if (loading) {
         return <p>পণ্যের তথ্য লোড হচ্ছে...</p>;
     }
-    console.log(result);
 
 
     return (
