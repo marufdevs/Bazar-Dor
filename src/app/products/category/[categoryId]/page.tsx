@@ -1,3 +1,4 @@
+import FallBack from '@/app/Components/FallBack';
 import { Product } from '@/app/Types/SingleProduct';
 import Link from 'next/link';
 import React, { Suspense } from 'react';
@@ -70,7 +71,7 @@ const CategoryPage = ({ params }: PageProps) => {
                         <span className="text-green-500">▼</span>
                         <h2 className="font-bold">আজ দাম কমেছে</h2>
                     </div>
-                    <Suspense fallback={<p>পণ্যের তথ্য লোড হচ্ছে...</p>}>
+                    <Suspense fallback={<FallBack />}>
                         <DataFecth params={params} />
                     </Suspense>
                 </div>

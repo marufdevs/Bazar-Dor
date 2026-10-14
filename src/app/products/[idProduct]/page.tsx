@@ -1,3 +1,4 @@
+import FallBack from '@/app/Components/FallBack';
 import ProductContent from '@/app/Components/SingleProductComponents/ProductContent';
 import Image from 'next/image';
 import React, { Suspense } from 'react';
@@ -14,7 +15,7 @@ const ProductDetailesPage = async ({ params }: PageProps) => {
 
     return (
         <div>
-            <Suspense fallback={<p>Loading...</p>}>
+            <Suspense fallback={<FallBack />}>
                 <ProductContent params={params}></ProductContent>
             </Suspense>
         </div>
