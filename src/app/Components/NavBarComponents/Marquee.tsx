@@ -32,7 +32,7 @@ const Marquee = () => {
           {data.map((item) => {
             // console.log(item);
             return (
-              <Link href={`/product/${item.id}`} key={item.id} className="flex">
+              <Link href={`/products/${item.id}`} key={item.id} className="flex">
                 <span>
                   {item.categoryIcon} {item.nameBn} {item.today}/{item.unit}{" "}
 

@@ -1,0 +1,82 @@
+import { Product } from '@/app/Types/SingleProduct';
+import Link from 'next/link';
+import React, { Suspense } from 'react';
+interface PageProps {
+    params: Promise<{
+        categoryId: string;
+    }>;
+}
+
+const DataFecth = async ({ params }: PageProps) => {
+    const { categoryId } = await params;
+    const res = await fetch("https://openapi.programming-hero.com/api/bazardor/products");
+    const result = await res.json();
+    const priceUPProduct = result.filter((item: Product) => {
+        return item.category === categoryId
+    })
+
+    return (
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 w-full">
+            {priceUPProduct.map((item: Product) => (
+                <Link key={item.id} href={`/products/${item.id}`}>
+                    <div
+                        key={item.id}
+                        className="rounded-xl border border-gray-200 bg-white/80 p-3 sm:p-4"
+                    >
+                        <div className="flex items-center gap-3">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#F0F5F0] text-xl">
+                                {item.image}
+                            </div>
+
+                            <div className="min-w-0">
+                                <h3 className="text-sm font-semibold text-gray-800">
+                                    {item.nameBn}
+                                </h3>
+                                <p className="text-xs text-gray-500">প্রতি কেজি</p>
+                            </div>
+                        </div>
+
+                        {/* Today's price and price change */}
+                        <div className="mt-4 flex items-end justify-between gap-2">
+                            <div>
+                                <p className="text-xs text-gray-500">আজকের দাম</p>
+                                <p className="text-base font-bold text-gray-900">
+                                    {item.today} <span className="text-xs font-normal">টাকা</span>
+                                </p>
+                            </div>
+
+                            <div className="shrink-0 rounded-full px-2 py-1 text-[10px] font-medium text-green-500">
+                                ▼{" "}
+                                {Math.abs(item.change.pct)}%
+                            </div>
+                        </div>
+                    </div>
+                </Link>
+            ))}
+
+        </div>
+
+    )
+}
+
+
+const CategoryPage = ({ params }: PageProps) => {
+
+    return (
+        <div className='p-4 sm:p-6 md:p-8 lg:px-10'>
+            <div className="mx-auto w-full max-w-7xl rounded-2xl border border-[#DFE8DF] bg-[#FAFCFA] p-4 sm:p-6 md:p-8 lg:px-10">
+                <div className='flex flex-col'>
+                    <div className="mb-4 flex items-center gap-2">
+                        <span className="text-green-500">▼</span>
+                        <h2 className="font-bold">আজ দাম কমেছে</h2>
+                    </div>
+                    <Suspense fallback={<p>পণ্যের তথ্য লোড হচ্ছে...</p>}>
+                        <DataFecth params={params} />
+                    </Suspense>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default CategoryPage;
