@@ -1,22 +1,28 @@
 import { signOut } from "@/lib/auth-client";
-
+import Link from "next/link";
+import { toast } from "react-toastify";
 
 const DropDwon = () => {
   return (
     <>
       <li>
-        <a className="justify-between">
+        <Link href="/profile" className="justify-between">
           Profile
           <span className="badge">New</span>
-        </a>
+        </Link>
       </li>
       <li>
-        <a>Settings</a>
+        <Link href="/setting">Settings</Link>
       </li>
       <li>
         <button
-          onClick={() => {
-            signOut();
+          onClick={async () => {
+            try {
+              await signOut();
+              toast.success("SuccessFully Logouted");
+            } catch {
+              toast.error("Failed to log out!");
+            }
           }}
         >
           Logout

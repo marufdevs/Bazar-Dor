@@ -7,7 +7,7 @@ const DataFecth = async () => {
     const result = await res.json();
     const priceUPProduct = result.filter((item: Product) => {
         return item.change.dir === "up"
-    })
+    }).slice(0, 6)
 
     return (
 

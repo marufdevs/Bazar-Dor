@@ -4,7 +4,6 @@ import { signIn } from "@/lib/auth-client";
 import { EyeSlash } from "@gravity-ui/icons";
 import {
   Button,
-  Description,
   FieldError,
   Form,
   Input,
@@ -19,14 +18,32 @@ import { useState } from "react";
 export default function SignInPage() {
   const [isVisible, setIsVisible] = useState(false);
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const data: Record<string, string> = Object.fromEntries(formData.entries());
-    const { data: resData, err } = await signIn.email({
+    const data = Object.fromEntries(
+      Array.from(formData.entries()).map(([key, value]) => [
+        key,
+        typeof value === "string" ? value : value.name,
+      ]),
+    ) as Record<string, string>;
+    const { data: resData, error } = await signIn.email({
       email: data.email,
       password: data.password,
-      callbackURL: '/',
+      callbackURL: "/",
+    });
+  };
+
+  const handleGoogleSignIn = async () => {
+    const data = await signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
+  };
+
+  const handleDiscordLogin = async () => {
+    const data = await signIn.social({
+      provider: "github",
     });
   };
 
@@ -97,6 +114,14 @@ export default function SignInPage() {
                 </Button>
               </InputGroup.Suffix>
             </InputGroup>
+            <div className="mt-2 flex justify-end">
+              <Link
+                href="/reset-password"
+                className="text-xs font-medium text-[#079447] transition hover:text-[#067735] hover:underline lg:text-sm"
+              >
+                Forget Password?
+              </Link>
+            </div>
           </TextField>
 
           <div className="flex w-full flex-col gap-4 lg:gap-5">
@@ -115,6 +140,7 @@ export default function SignInPage() {
 
             <div className="grid w-full grid-cols-1 gap-2 min-[360px]:grid-cols-2">
               <button
+                onClick={() => handleGoogleSignIn()}
                 type="button"
                 className="flex h-[35px] w-full items-center justify-center gap-1.5 rounded-lg border border-[#e0e8e1] bg-transparent px-2 text-xs font-medium text-[#263129] transition hover:bg-[#f1f5f1] lg:h-10 lg:text-sm"
               >
@@ -149,6 +175,7 @@ export default function SignInPage() {
               </button>
 
               <button
+                onClick={() => handleDiscordLogin()}
                 type="button"
                 className="flex h-[35px] w-full items-center justify-center gap-1.5 rounded-lg border border-[#e0e8e1] bg-transparent px-2 text-xs font-medium text-[#263129] transition hover:bg-[#f1f5f1] lg:h-10 lg:text-sm"
               >

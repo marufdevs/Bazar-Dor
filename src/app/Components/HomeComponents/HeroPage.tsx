@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 const HeroPage = () => {
@@ -28,12 +29,14 @@ const HeroPage = () => {
           বিস্তারিত, গড়, সর্বনিম্ন-সর্বাধিক এবং দামের পরিবর্তন এক জায়গায়।
         </p>
 
-        <button
-          type="button"
-          className="mt-6 inline-flex items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-green-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2 active:scale-[0.98] sm:text-base"
-        >
-          সব পণ্য দেখুন
-        </button>
+        <Link href="#allProducts">
+          <button
+            type="button"
+            className="mt-6 inline-flex items-center justify-center rounded-lg bg-green-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-green-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-600 focus-visible:ring-offset-2 active:scale-[0.98] sm:text-base"
+          >
+            সব পণ্য দেখুন
+          </button>
+        </Link>
       </div>
 
       <div className="flex w-full shrink-0 items-center justify-center md:w-[240px] lg:w-[280px]">

@@ -7,7 +7,9 @@ const DataFecth = async () => {
     const result = await res.json();
     const priceUPProduct = result.filter((item: Product) => {
         return item.change.dir === "down"
-    })
+    }).slice(0, 6)
+    console.log(priceUPProduct.slice(0,6));
+    
 
     return (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 w-full">

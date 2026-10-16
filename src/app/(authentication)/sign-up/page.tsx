@@ -1,6 +1,6 @@
 "use client";
 
-import { signUp } from "@/lib/auth-client";
+import { signIn, signUp } from "@/lib/auth-client";
 import { EyeSlash } from "@gravity-ui/icons";
 import {
   Button,
@@ -18,22 +18,46 @@ import { redirect } from "next/navigation";
 import { useState } from "react";
 
 export default function SignUpPage() {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible1, setIsVisible1] = useState(false);
+  const [isVisible2, setIsVisible2] = useState(false);
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const data: Record<string, string> = Object.fromEntries(formData.entries());
-    const { data: resData, err } = await signUp.email({
+    const data = Object.fromEntries(
+      Array.from(formData.entries()).map(([key, value]) => [
+        key,
+        typeof value === "string" ? value : value.name,
+      ]),
+    ) as Record<string, string>;
+
+    const { data: resData, error } = await signUp.email({
       name: data.name,
       email: data.email,
       password: data.password,
-      callbackURL: "/"
+      callbackURL: "/",
     });
-    if(data){
-        redirect('/')
+
+    if (data) {
+      redirect("/");
     }
   };
+
+    const handleGoogleSignUp = async() => {
+      const data = await signIn.social({
+        provider: "google",
+        callbackURL: "/"
+      });
+      if(data){
+        redirect('/')
+      }
+    };
+
+    const handleDiscordLogin = async () => {
+      const data = await signIn.social({
+        provider: "github",
+      });
+    };
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center bg-[#f0f5f1] px-4 py-10 sm:py-12">
@@ -103,19 +127,19 @@ export default function SignUpPage() {
               <InputGroup.Input
                 name="password"
                 className="h-full w-full min-w-0 border-0 bg-transparent px-3 text-xs text-[#263129] outline-none lg:text-sm"
-                type={isVisible ? "text" : "password"}
+                type={isVisible1 ? "text" : "password"}
                 placeholder="কমপক্ষে ৮ অক্ষর"
               />
               <InputGroup.Suffix className="pe-1">
                 <Button
                   isIconOnly
-                  aria-label={isVisible ? "Hide password" : "Show password"}
+                  aria-label={isVisible1 ? "Hide password" : "Show password"}
                   size="sm"
                   variant="ghost"
                   className="text-[#69746b]"
-                  onPress={() => setIsVisible(!isVisible)}
+                  onPress={() => setIsVisible1(!isVisible1)}
                 >
-                  {isVisible ? (
+                  {isVisible1 ? (
                     <Eye className="size-4" />
                   ) : (
                     <EyeSlash className="size-4" />
@@ -133,19 +157,19 @@ export default function SignUpPage() {
               <InputGroup.Input
                 name="password"
                 className="h-full w-full min-w-0 border-0 bg-transparent px-3 text-xs text-[#263129] outline-none lg:text-sm"
-                type={isVisible ? "text" : "password"}
+                type={isVisible2 ? "text" : "password"}
                 placeholder="আবার লিখুন"
               />
               <InputGroup.Suffix className="pe-1">
                 <Button
                   isIconOnly
-                  aria-label={isVisible ? "Hide password" : "Show password"}
+                  aria-label={isVisible2 ? "Hide password" : "Show password"}
                   size="sm"
                   variant="ghost"
                   className="text-[#69746b]"
-                  onPress={() => setIsVisible(!isVisible)}
+                  onPress={() => setIsVisible2(!isVisible2)}
                 >
-                  {isVisible ? (
+                  {isVisible2 ? (
                     <Eye className="size-4" />
                   ) : (
                     <EyeSlash className="size-4" />
@@ -171,6 +195,7 @@ export default function SignUpPage() {
 
             <div className="grid w-full grid-cols-1 gap-2 min-[360px]:grid-cols-2">
               <button
+                onClick={() => handleGoogleSignUp()}
                 type="button"
                 className="flex h-[35px] w-full items-center justify-center gap-1.5 rounded-lg border border-[#e0e8e1] bg-transparent px-2 text-xs font-medium text-[#263129] transition hover:bg-[#f1f5f1] lg:h-10 lg:text-sm"
               >
@@ -205,6 +230,7 @@ export default function SignUpPage() {
               </button>
 
               <button
+              onClick={()=>{handleDiscordLogin()}}
                 type="button"
                 className="flex h-[35px] w-full items-center justify-center gap-1.5 rounded-lg border border-[#e0e8e1] bg-transparent px-2 text-xs font-medium text-[#263129] transition hover:bg-[#f1f5f1] lg:h-10 lg:text-sm"
               >
