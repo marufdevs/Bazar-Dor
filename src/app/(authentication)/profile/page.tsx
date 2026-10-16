@@ -16,16 +16,24 @@ import {
 } from "@heroui/react";
 import { signOut, updateUser, useSession } from "@/lib/auth-client";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 const ProfilePage = () => {
   const { data: session } = useSession();
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const data: Record<string, string> = Object.fromEntries(formData.entries());
-    const { user, error } = await updateUser({
-      name: data.name,
+    const data = Object.fromEntries(formData.entries());
+    const name = String(data.name ?? "");
+    const { data: user, error } = await updateUser({
+      name: name,
     });
+    if (error) {
+      toast.error(error.message || "Profile update failed!");
+      return;
+    }
+
+    toast.success("Profile updated successfully!");
   };
 
   return (
@@ -115,7 +123,7 @@ const ProfilePage = () => {
               href="/reset-password"
               className="text-xs font-medium  lg:text-sm"
             >
-              Change Password?{" "}
+              Update Password?{" "}
               <span className="text-[#079447] transition hover:text-[#067735] hover:underline">
                 Clik here
               </span>{" "}

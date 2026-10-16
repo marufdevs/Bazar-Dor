@@ -1,6 +1,6 @@
 "use client";
 
-import { signIn } from "@/lib/auth-client";
+import { signIn, useSession } from "@/lib/auth-client";
 import { EyeSlash } from "@gravity-ui/icons";
 import {
   Button,
@@ -13,39 +13,63 @@ import {
 } from "@heroui/react";
 import { Eye } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function SignInPage() {
   const [isVisible, setIsVisible] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { data: session } = useSession();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(
-      Array.from(formData.entries()).map(([key, value]) => [
-        key,
-        typeof value === "string" ? value : value.name,
-      ]),
-    ) as Record<string, string>;
+    const data = Object.fromEntries(formData.entries());
+    const email = String(data.email ?? "");
+    const password = String(data.password ?? "");
     const { data: resData, error } = await signIn.email({
-      email: data.email,
-      password: data.password,
-      callbackURL: "/",
+      email: email,
+      password: password,
+      callbackURL: "/sign-in?login=success",
     });
+
+    if (error) {
+      toast.error(error.message || "Profile Loged failed!");
+      return;
+    }
   };
 
   const handleGoogleSignIn = async () => {
-    const data = await signIn.social({
+    const { data, error } = await signIn.social({
       provider: "google",
-      callbackURL: "/",
+      callbackURL: "/sign-in?login=success",
     });
+    if (error) {
+      toast.error(error.message || "Profile Loged failed!");
+      return;
+    }
   };
 
   const handleDiscordLogin = async () => {
-    const data = await signIn.social({
+    const { data, error } = await signIn.social({
       provider: "github",
+      callbackURL: "/sign-in?login=success",
     });
+    if (error) {
+      toast.error(error.message || "Profile Loged failed!");
+      return;
+    }
   };
+
+  useEffect(() => {
+    if (searchParams.get("login") === "success" && session?.user) {
+      toast.success("Successfully logged in!");
+      router.replace("/");
+    }
+  }, [searchParams, session, router]);
+
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center bg-[#f0f5f1] px-4 py-10 sm:py-12">
@@ -116,7 +140,7 @@ export default function SignInPage() {
             </InputGroup>
             <div className="mt-2 flex justify-end">
               <Link
-                href="/reset-password"
+                href="/forget-password"
                 className="text-xs font-medium text-[#079447] transition hover:text-[#067735] hover:underline lg:text-sm"
               >
                 Forget Password?
