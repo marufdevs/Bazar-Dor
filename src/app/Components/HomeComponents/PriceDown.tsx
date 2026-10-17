@@ -8,7 +8,6 @@ const DataFecth = async () => {
     const priceUPProduct = result.filter((item: Product) => {
         return item.change.dir === "down"
     }).slice(0, 6)
-    console.log(priceUPProduct.slice(0,6));
     
 
     return (

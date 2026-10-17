@@ -29,12 +29,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#f0f5f0]">
-        <CategoryContextProvider>
-          <ToastContainer />
-          <NavBar />
-          <main>{children}</main>
-          <Footer />
-        </CategoryContextProvider>
+      
+          <CategoryContextProvider>
+            <ToastContainer />
+            <NavBar />
+            <main>{children}</main>
+            <Footer />
+          </CategoryContextProvider>
+        
       </body>
     </html>
   );

@@ -16,6 +16,7 @@ import { Eye } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function SignUpPage() {
   const [isVisible1, setIsVisible1] = useState(false);
@@ -44,10 +45,15 @@ export default function SignUpPage() {
   };
 
     const handleGoogleSignUp = async() => {
-      const data = await signIn.social({
+      const {data, error} = await signIn.social({
         provider: "google",
         callbackURL: "/"
       });
+      if(error){
+        console.log(error);
+        
+        return toast.error(error.message)
+      }
       if(data){
         redirect('/')
       }

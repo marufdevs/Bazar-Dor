@@ -17,9 +17,11 @@ import {
 import { signOut, updateUser, useSession } from "@/lib/auth-client";
 import Link from "next/link";
 import { toast } from "react-toastify";
+import { redirect, useRouter } from "next/navigation";
 
 const ProfilePage = () => {
   const { data: session } = useSession();
+  const router = useRouter()
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -62,7 +64,15 @@ const ProfilePage = () => {
           </div>
 
           <button
-            onClick={() => signOut()}
+            onClick={async () => {
+              try {
+                await signOut();
+                toast.success("SuccessFully Logouted");
+                router.replace("/");
+              } catch {
+                toast.error("Failed to log out!");
+              }
+            }}   
             className="shrink-0 self-start rounded-lg border border-red-400 px-4 py-2 text-sm font-medium text-red-500 transition hover:bg-red-50 sm:self-center"
           >
             ↩ সাইন আউট
