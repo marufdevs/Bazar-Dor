@@ -21,10 +21,3 @@ A modern e-commerce and grocery web application built to make online shopping se
 
 ---
 
-## 🚀 Getting Started
-
-To run this project locally on your machine, follow these steps:
-
-### 1. Clone the repository
-```bash
-git clone [https://github.com/marufdevs/Bazar-Dor.git](https://github.com/marufdevs/Bazar-Dor.git)
